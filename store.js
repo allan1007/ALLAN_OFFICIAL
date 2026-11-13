@@ -1,0 +1,23 @@
+let products=[],site={},cart=JSON.parse(localStorage.getItem("allan_cart")||"[]"),selected=null;
+const $=id=>document.getElementById(id),money=cents=>"S$"+(cents/100).toFixed(2);
+async function get(url){const r=await fetch(url);if(!r.ok)throw new Error("Could not load store");return r.json()}
+function saveCart(){localStorage.setItem("allan_cart",JSON.stringify(cart));renderCart()}
+function renderCart(){
+ $("cartCount").textContent=cart.reduce((n,x)=>n+x.quantity,0);
+ $("cartItems").innerHTML=cart.length?cart.map((x,i)=>`<div class="cart-row"><img src="${esc(x.image_url)}" alt=""><div><h4>${esc(x.name)}</h4><p>SIZE ${esc(x.size)} · QTY ${x.quantity}</p><p>${money(x.price_cents)}</p><button class="remove" data-remove="${i}">REMOVE</button></div></div>`).join(""):'<p class="muted">Your bag is empty.</p>';
+ $("subtotal").textContent=money(cart.reduce((n,x)=>n+x.price_cents*x.quantity,0));
+ document.querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>{cart.splice(+b.dataset.remove,1);saveCart()});
+}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function renderProducts(){
+ $("products").innerHTML=products.length?products.map(p=>`<article class="product-card" data-id="${p.id}"><img class="product-image" src="${esc(p.image_url||"")}" alt="${esc(p.name)}" onerror="this.style.visibility='hidden'"><div class="product-meta"><div><h3>${esc(p.name)}</h3><p>${esc(p.category)}</p></div><span class="product-price">${money(p.price_cents)}</span></div></article>`).join(""):'<p class="muted">The next drop is on its way.</p>';
+ document.querySelectorAll(".product-card").forEach(el=>el.onclick=()=>openProduct(products.find(p=>p.id===+el.dataset.id)));
+}
+function openProduct(p){selected=p;$("modalImage").src=p.image_url;$("modalName").textContent=p.name;$("modalDescription").textContent=p.description;$("modalPrice").textContent=money(p.price_cents);$("modalCategory").textContent="ALLAN / "+p.category.toUpperCase();$("modalSize").innerHTML=(p.sizes||["S","M","L","XL"]).map(s=>`<option>${esc(s)}</option>`).join("");$("productModal").classList.add("open")}
+$("closeModal").onclick=()=>$("productModal").classList.remove("open");
+$("addToCart").onclick=()=>{const size=$("modalSize").value;const found=cart.find(x=>x.id===selected.id&&x.size===size);if(found)found.quantity++;else cart.push({id:selected.id,name:selected.name,size,price_cents:selected.price_cents,image_url:selected.image_url,quantity:1});$("productModal").classList.remove("open");saveCart();openCart()};
+function openCart(){$("cartOverlay").classList.add("open");$("cartDrawer").classList.add("open")}
+function closeCart(){$("cartOverlay").classList.remove("open");$("cartDrawer").classList.remove("open")}
+$("openCart").onclick=openCart;$("closeCart").onclick=closeCart;$("cartOverlay").onclick=closeCart;
+$("checkout").onclick=async()=>{const email=$("checkoutEmail").value.trim();$("checkoutMessage").textContent="";if(!email){$("checkoutMessage").textContent="Please enter your email.";return}if(!cart.length){$("checkoutMessage").textContent="Your bag is empty.";return}$("checkout").disabled=true;$("checkout").textContent="REDIRECTING...";try{const r=await fetch("/api/checkout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,items:cart.map(x=>({id:x.id,size:x.size,quantity:x.quantity}))})});const d=await r.json();if(!r.ok)throw new Error(d.error);location.href=d.url}catch(e){$("checkoutMessage").textContent=e.message;$("checkout").disabled=false;$("checkout").textContent="CHECK OUT ↗"}};
+(async()=>{try{[products,site]=await Promise.all([get("/api/products"),get("/api/site")]);$("announcement").textContent=site.announcement||"ALLAN — NEW DROP";$("heroTitle").innerHTML=esc(site.heroTitle||"BUILT DIFFERENT.").replace(/\n/g,"<br>");$("heroSubtitle").textContent=site.heroSubtitle||"";$("heroImage").style.backgroundImage=`url("${site.heroImage||""}")`;$("aboutText").textContent=site.about||"";$("contactLink").href="mailto:"+encodeURIComponent(site.contactEmail||"hello@allan.store");if(site.instagram){$("instagramLink").href=site.instagram}else{$("instagramLink").style.display="none"}renderProducts();renderCart();$("year").textContent=new Date().getFullYear();const status=new URLSearchParams(location.search).get("checkout");if(status==="success"){cart=[];saveCart();alert("Thanks for your order! A confirmation will be sent to your email.")}if(status==="cancelled")alert("Checkout cancelled. Your bag is still here.")}catch(e){$("products").textContent="Store is temporarily unavailable. Please refresh in a moment."}})();

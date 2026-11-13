@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090909"><title>ALLAN — Built Different</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="announcement" id="announcement">FIRST DROP — AVAILABLE NOW</div>
+<header class="header">
+  <a class="wordmark" href="/">ALLAN<span>.</span></a>
+  <nav><a href="#shop">SHOP</a><a href="#story">ABOUT</a><a href="#contact">CONTACT</a></nav>
+  <button class="bag-button" id="openCart">BAG <span id="cartCount">0</span></button>
+</header>
+<main>
+<section class="hero" id="hero">
+  <div class="hero-image" id="heroImage"></div><div class="hero-shade"></div>
+  <div class="hero-copy"><p class="eyebrow">INDEPENDENT STREETWEAR / EST. 2026</p><h1 id="heroTitle">BUILT<br>DIFFERENT<span>.</span></h1><p id="heroSubtitle">Independent streetwear. Made to stand out.</p><a class="button light" href="#shop">SHOP THE DROP <span>↗</span></a></div>
+  <div class="hero-index">DROP 001 / SINGAPORE</div>
+</section>
+<section class="ticker"><div>NO RULES. NO UNIFORM. ALLAN. — NO RULES. NO UNIFORM. ALLAN. — NO RULES. NO UNIFORM. ALLAN. —</div></section>
+<section class="shop section" id="shop"><div class="section-heading"><div><p class="eyebrow">THE FIRST RELEASE</p><h2>SHOP THE DROP<span>.</span></h2></div><p class="muted">01 — COLLECTION</p></div><div class="product-grid" id="products"><div class="loading">LOADING THE DROP...</div></div></section>
+<section class="manifesto" id="story"><div class="manifesto-top"><p class="eyebrow">THE ALLAN POINT OF VIEW</p><span>01 / 03</span></div><h2 id="aboutText">ALLAN IS AN INDEPENDENT STREETWEAR LABEL BUILT AROUND SELF-EXPRESSION, CONFIDENCE AND EVERYDAY ESSENTIALS.</h2><div class="manifesto-bottom"><span>WEAR YOUR OWN STORY.</span><span>ALLAN® — SINGAPORE</span></div></section>
+<section class="newsletter" id="contact"><div><p class="eyebrow">STAY IN THE LOOP</p><h2>THE NEXT DROP<br>IS COMING.</h2></div><a id="contactLink" class="button outline" href="mailto:hello@allan.store">GET IN TOUCH ↗</a></section>
+</main>
+<footer><a class="wordmark" href="/">ALLAN<span>.</span></a><span>© <span id="year"></span> ALLAN. ALL RIGHTS RESERVED.</span><a id="instagramLink" href="#" target="_blank" rel="noreferrer">INSTAGRAM ↗</a><a href="/admin.html">ADMIN</a></footer>
+
+<div class="overlay" id="cartOverlay"></div><aside class="cart-drawer" id="cartDrawer"><div class="drawer-head"><h3>YOUR BAG</h3><button id="closeCart" class="x-button">✕</button></div><div id="cartItems" class="cart-items"><p class="muted">Your bag is empty.</p></div><div class="cart-bottom"><div class="subtotal"><span>SUBTOTAL</span><strong id="subtotal">S$0.00</strong></div><p class="tiny muted">Shipping calculated at checkout.</p><label class="email-label" for="checkoutEmail">EMAIL FOR ORDER UPDATES</label><input id="checkoutEmail" type="email" placeholder="you@example.com"><button id="checkout" class="button light full">CHECK OUT ↗</button><p id="checkoutMessage" class="tiny"></p></div></aside>
+<div class="modal" id="productModal"><div class="modal-card"><button class="x-button modal-close" id="closeModal">✕</button><img id="modalImage" alt=""><div class="modal-info"><p class="eyebrow" id="modalCategory">ALLAN / DROP 001</p><h3 id="modalName"></h3><p id="modalDescription" class="muted"></p><strong id="modalPrice"></strong><label for="modalSize">SELECT SIZE</label><select id="modalSize"></select><button class="button light full" id="addToCart">ADD TO BAG</button></div></div></div>
+<script src="/store.js"></script>
+</body></html>
